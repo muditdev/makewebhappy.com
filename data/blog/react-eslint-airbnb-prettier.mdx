@@ -1,0 +1,143 @@
+---
+title: 'How to set up Modern React js workflow with Vite, esm, eslint, airbnb and prettier'
+publishedAt: '2021-04-25'
+summary: 'A simple guide to setup react js project with vite 2, eslint and airbnb goodness'
+og: '/blog/animated-music-bars/og.png'
+image: '/blog/Reactjs-vite-airbnb.jpeg'
+tags: ["React", "Vite", "ESLint", "Airbnb"]
+--- 
+
+Photo by <a href="https://unsplash.com/@sigmund?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Sigmund</a> on <a href="https://unsplash.com/s/photos/girl-code?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+We all have used tools like webpack, Rollup and Parcel, mostly we used create-react-app which is webpack under the hood. These tools greatly improved the development experience for front-end developers.
+
+# The problem with create-react-app or popular tools
+
+Although create react app is a fantastic tool but we know it's slow. so every time you save your changes, it rebuilds and then you will see changes in the browser which is not quite noticeable in small projects (Mini MVPs or like todo app). I am personally not impressed with the development experience with CRA when we are working with large apps.
+
+# The modern tools
+
+Today we have better tools that give awesome build experience with development. _Snowpack_ and _Vite_ are two popular tools available, that we can use. These awesome tools leverage JavaScript's native module system (known as ESM) to avoid unnecessary work and stay fast no matter how big your project grows.
+
+Before ES modules were available in browsers, developers had no native mechanism for authoring JavaScript in a modularized fashion. This is why we are all familiar with the concept of "bundling": using tools that crawl, process and concatenate our source modules into files that can run in the browser.
+
+# Creating a react app with vite
+
+Creating a react project is very simple by just running this command in your terminal
+
+```bash
+ npm init @vitejs/app
+ // or
+ yarn create @vitejs/app
+```
+
+After running this command vite will prompt few questions you have to pick react and javascript or typescript, and you are good to go.
+
+Now you will need to install your dependancies
+
+```bash
+ npm install
+ // or
+ yarn
+```
+
+You will see command on your screen to start the development server, just run **npm run dev** it will start the server on **PORT 3000**.
+Easy right
+
+### Set up ESlint and Airbnb coding styles
+
+Linting is big part of development process, We all want to avoid bugs and follow the best style guilds.
+i would recommand airbnb style guide for react, i think its awesome..
+let's get started with setting it up
+
+For vscode we have to install _eslint_ and _prettier_ extensions.
+
+### Install ESlint
+
+```bash
+npx eslint --init
+```
+
+It will prompt few questions you can just select react, browser and airbnb as poplular style guide options.
+Install packages using npm or yarn and your are good to go..
+
+It will generate a eslintrc file, this is the entry file to your eslint config. before setting this up let's start few more packages to help browser to formate code currectly
+
+```bash
+npm i -D eslint prettier eslint-plugin-prettier eslint-config-prettier
+
+```
+
+#### Set up eslintrc
+
+```json
+{
+	"extends": [
+		"plugin:react/recommanded"
+		"airbnb",
+		"prettier",
+	],
+
+"plugins": [
+	"prettier"
+]
+
+"rules" : {
+//here we can change any rule "off/error/warn"
+"prettier/prettier": "error" // or warn
+// this is needed for prettier to work
+
+//example rules
+
+"no-unused-vars": "warn" // default in airbnb is error
+
+//you can disable add or remove rules based on your coding taste
+}
+
+}
+```
+
+[List of available rules](https://eslint.org/docs/rules/)
+
+If you're using VISUAL STUDIO CODE as you coding editor. I recommnd adding these to your Workspace settings
+
+```json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+### Add .prettierrc
+
+```json
+{
+  "semi": false,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "useTabs": false
+}
+```
+
+### Add .eslintignore
+
+you can add your files or directory, you want to ignore for eslint
+
+```
+/dist
+*.scss
+*.css
+/.next
+/node_modules
+/build
+```
+
+We are almost there. Just restart your vscode and you have set up your modern react workflow.
+
+Thanks you for reading...
+
+Check out the (full source code on GitHub)
+[https://github.com/muditdev/react-starter-vite.git](https://github.com/muditdev/react-starter-vite.git)
