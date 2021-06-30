@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <SEO />
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link href="https://twitter.com/muditit" rel="me" />
       </Head>
       <ThemeProvider>
         <Component {...pageProps} />

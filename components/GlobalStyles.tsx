@@ -1,6 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
+import { ThemeTypes } from 'utils/theme';
 
-const GlobalStyle = createGlobalStyle`
+type Props = {
+  theme: ThemeTypes;
+};
+const GlobalStyle = createGlobalStyle<Props>`
 :root {
   --bg: #fff;
   --text: #000;
@@ -44,11 +48,18 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--fontFamily);
+  font-family: ${props => props.theme.primaryFont};
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+html{
+	background-color: ${({ theme }) => theme.colors.bg_viewport};
+}
+body{
+	background:  ${({ theme }) => theme.colors.bg};
+	margin: 2.25rem;
+	border-radius: 1.5rem;
+}
 a {
   color: inherit;
   text-decoration: none;
@@ -61,11 +72,12 @@ a {
   margin-top: 0;
 }
 
-body {
+/* body {
   color: var(--text);
   background-color: var(--bg);
-}
-
+} */
+ul{list-style-type: none;
+margin: 0;padding:0}
 h2 {
   margin-bottom: 30px;
   font-weight: 800;
@@ -76,7 +88,9 @@ h2 {
     margin-bottom: 55px;
   }
 }
-
+.d-f{
+	display: flex;
+}
 
 /*
  * Hopscotch
@@ -122,7 +136,12 @@ pre[class*='language-'] {
   padding: 0.1em;
   border-radius: 0.3em;
 }
-
+.mt-1{
+	margin-top: 1rem;
+}
+.mt-2{
+	margin-top: 2rem;
+}
 .token.comment,
 .token.prolog,
 .token.doctype,

@@ -33,6 +33,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['warn'],
+    '@typescript-eslint/no-unused-vars': 'error',
+    'no-unused-vars': 'off',
   },
   globals: {
     JSX: true,

@@ -4,21 +4,6 @@ import Link from 'next/link';
 import PageTransition from 'components/PageTransition';
 import styled from 'styled-components';
 
-const Container = styled.div`
-  max-width: var(--siteWidth);
-  margin: 0 auto;
-  padding: 0 15px;
-
-  @media (min-width: 480px) {
-    padding: 0 30px;
-  }
-  & > main {
-    margin-bottom: 50px;
-    @media (min-width: 480px) {
-      margin-bottom: 80px;
-    }
-  }
-`;
 const Footer = styled.footer`
   width: 100%;
   padding: 30px 0;
@@ -59,7 +44,7 @@ type Props = {
 const footerLinks = [];
 
 const Layout = ({ children }: Props): JSX.Element => (
-  <Container>
+  <>
     <Header />
     <main>
       <PageTransition>{children}</PageTransition>
@@ -76,8 +61,7 @@ const Layout = ({ children }: Props): JSX.Element => (
       </Links>
       <p className="copy">&copy; makewebhappy {new Date().getFullYear()}</p>
     </Footer>
-    <link href="https://twitter.com/muditit" rel="me" />
-  </Container>
+  </>
 );
 
 export default Layout;

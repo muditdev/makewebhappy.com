@@ -5,12 +5,11 @@ import matter from 'gray-matter';
 import path from 'path';
 import { NextSeo } from 'next-seo';
 import readingTime from 'reading-time';
-import { Search } from 'react-feather';
+import { Search as SearchIcon } from 'react-feather';
 import debounce from 'lodash.debounce';
 
 // Components
 import Layout from 'components/Layout';
-
 import Newsletter from 'components/newsletter';
 import Input from 'components/Input';
 import PostList from 'components/Posts';
@@ -21,43 +20,12 @@ import * as gtag from 'lib/gtag';
 
 // Types
 import type { Meta } from 'pages/blog/[slug]';
-import styled from 'styled-components';
-// import Button from 'components/Button';
-import { Button } from 'happyui/Button';
 
-const Container = styled.div`
-  .input {
-    width: 250px;
-    max-width: 100%;
-    padding-left: 35px;
-    transition: all 150ms ease-out;
-    &:hover,
-    &:active,
-    &:focus {
-      border-color: var(--brand);
-      outline: none;
-      box-shadow: 0 0 0 4px var(--brandTinted);
-    }
-  }
-
-  .inputWrapper {
-    position: relative;
-  }
-
-  .inputIcon {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    width: 18px;
-    transform: translateY(calc(-50% - 1px));
-
-    circle,
-    line {
-      opacity: 0.6;
-      stroke: var(--text);
-    }
-  }
-`;
+import Banner from 'components/Banner';
+import Container from 'happyui/Container';
+import { Col, Grid } from 'happyui/Grid';
+import Search from 'components/Search';
+import Heading from 'happyui/Heading';
 
 export type BlogPosts = Array<{ content: string; filePath: string; meta: Meta }>;
 
@@ -72,7 +40,7 @@ const Blog = ({ posts }: BlogProps): JSX.Element => {
     [],
   );
   const seoTitle = 'Blog | makewebhappy';
-  const seoDesc = 'I write about development, design, React, CSS, animation and more!';
+  const seoDesc = 'I write about React, design,  CSS, animation and more!';
   const filteredPosts = posts
     .sort((a, b) => new Date(b.meta.publishedAt).getTime() - new Date(a.meta.publishedAt).getTime())
     .filter(({ meta: { title, summary, tags } }) => {
@@ -80,12 +48,11 @@ const Blog = ({ posts }: BlogProps): JSX.Element => {
       return searchString.includes(currentSearch.toLowerCase());
     });
 
-  const handleInputChange = e => {
-    const searchString = e.target.value;
-    if (searchString !== '') {
-      trackSearch(searchString); // Save what people are interested in reading
+  const handleSearch = value => {
+    if (value !== '') {
+      trackSearch(value); // Save what people are interested in reading
     }
-    return setCurrentSearch(searchString);
+    return setCurrentSearch(value);
   };
 
   return (
@@ -103,13 +70,23 @@ const Blog = ({ posts }: BlogProps): JSX.Element => {
           cardType: 'summary_large_image',
         }}
       />
+      <Banner />
+      <Container size="lg">
+        <Grid>
+          <Col>
+            <Search onTextInput={handleSearch} />
+            <div className="mt-2">
+              <PostList posts={filteredPosts} />
+            </div>
+          </Col>
+          <Col>
+            <Heading level={3} align="center">
+              Today’s top resources
+            </Heading>
+          </Col>
+        </Grid>
+      </Container>
       <Container>
-        <div className="inputWrapper">
-          <Input className="input" value={currentSearch} onChange={handleInputChange} placeholder="Search posts…" type="search" />
-          <Search className="inputIcon" />
-        </div>
-        <Button>Test</Button>
-        <PostList posts={filteredPosts} />
         <Newsletter title="Subscribe to the newsletter" />
       </Container>
     </Layout>
