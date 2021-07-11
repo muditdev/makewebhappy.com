@@ -7,14 +7,14 @@ module.exports = {
   },
   webpack(config, { isServer }) {
     if (isServer) {
-      require('./scripts/generate-sitemap') // eslint-disable-line
-      require('./scripts/generate-rss') // eslint-disable-line
+      require('./scripts/generate-sitemap'); // eslint-disable-line
+      require('./scripts/generate-rss'); // eslint-disable-line
     }
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"]
+      use: ['@svgr/webpack'],
     });
 
-    return config
+    return config;
   },
-}
+};

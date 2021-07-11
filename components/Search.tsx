@@ -6,6 +6,9 @@ import { Input } from 'happyui/Input';
 
 const SearchContainer = styled.div`
   max-width: 500px;
+  input {
+    font-family: ${props => props.theme.primaryFont};
+  }
 `;
 
 interface SearchProp {

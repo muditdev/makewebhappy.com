@@ -8,6 +8,7 @@ const variants = {
   `,
   2: css`
     font-size: 2rem;
+    font-weight: 700;
   `,
   3: css`
     font-size: 1rem;

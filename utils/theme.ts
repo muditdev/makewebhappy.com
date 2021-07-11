@@ -48,6 +48,7 @@ export const light = {
     buttonText: `#FFFCF6`,
     text: `#1A1A1F`,
     inputBg: '#F2EFEA',
+    postBg: '#FEF8F3',
   },
 };
 export const theme = {

@@ -20,7 +20,7 @@ const HeaderContainer = styled.div`
   left: 0;
   z-index: 4;
   /* background-color: var(--headerBg); */
-  backdrop-filter: saturate(180%) blur(20px);
+  /* backdrop-filter: saturate(180%) blur(20px); */
   padding: ${props => props.theme.padding.md} 0;
 `;
 const StyledHeader = styled.header`

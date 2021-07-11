@@ -5,13 +5,12 @@ import matter from 'gray-matter';
 import path from 'path';
 import { NextSeo } from 'next-seo';
 import readingTime from 'reading-time';
-import { Search as SearchIcon } from 'react-feather';
+
 import debounce from 'lodash.debounce';
 
 // Components
 import Layout from 'components/Layout';
 import Newsletter from 'components/newsletter';
-import Input from 'components/Input';
 import PostList from 'components/Posts';
 
 // Utils

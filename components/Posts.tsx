@@ -4,6 +4,7 @@ import BlogImage from 'components/Blogimage';
 import ParallaxCover from 'components/blog/PostCover';
 import { formatDate } from 'lib/formatdate';
 import type { BlogPosts } from 'pages';
+import Heading from 'happyui/Heading';
 
 type PostListProps = {
   posts: BlogPosts;
@@ -46,6 +47,12 @@ const ListContainer = styled.ul`
   }
 `;
 
+const StyledPost = styled.div`
+  background: ${props => props.theme.colors.postBg};
+  padding: ${props => props.theme.padding.lg};
+  border-radius: ${props => props.theme.radius.lg};
+`;
+
 const PostList = ({ posts }: PostListProps): JSX.Element => (
   <ListContainer>
     {posts.length === 0 && <p className="noResults">🧐 No posts found</p>}
@@ -56,27 +63,31 @@ const PostList = ({ posts }: PostListProps): JSX.Element => (
       const slug = post.filePath.replace(/\.mdx?$/, '');
       return (
         <li key={post.filePath}>
-          {slug === 'spring-parallax-framer-motion-guide' && (
-            <Link href="/blog/spring-parallax-framer-motion-guide">
-              <a>
-                <ParallaxCover />
-              </a>
-            </Link>
-          )}
-          {image && (
+          <StyledPost>
+            {slug === 'spring-parallax-framer-motion-guide' && (
+              <Link href="/blog/spring-parallax-framer-motion-guide">
+                <a>
+                  <ParallaxCover />
+                </a>
+              </Link>
+            )}
+            {image && (
+              <Link as={`/blog/${slug}`} href="/blog/[slug]">
+                <a aria-label={title}>
+                  <BlogImage src={image} alt={title} />
+                </a>
+              </Link>
+            )}
             <Link as={`/blog/${slug}`} href="/blog/[slug]">
-              <a aria-label={title}>
-                <BlogImage src={image} alt={title} />
-              </a>
+              <Heading level={2} align="left">
+                {title}
+              </Heading>
             </Link>
-          )}
-          <Link as={`/blog/${slug}`} href="/blog/[slug]">
-            <a className="title">{title}</a>
-          </Link>
-          <p className="summary">{summary}</p>
-          <p className="meta">
-            Published on <time dateTime={publishedAt}>{formatDate(publishedAt)}</time> &middot; {readTime.text}
-          </p>
+            <p className="summary">{summary}</p>
+            <p className="meta">
+              Published on <time dateTime={publishedAt}>{formatDate(publishedAt)}</time> &middot; {readTime.text}
+            </p>
+          </StyledPost>
         </li>
       );
     })}
