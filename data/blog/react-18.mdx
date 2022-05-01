@@ -1,0 +1,197 @@
+---
+title: "What's new in React 18 ?"
+date: '2021-06-12T13:32:06.592Z'
+tags: ['react', 'react native', 'javascript']
+draft: false
+summary: 'A small introduction to react 18 features for beginners'
+authors: ['default']
+---
+
+![twitter-banner](/static/images/twitter-card.png)
+
+While there is still a lot more to come, I thought may be fascinating to share its top new features.
+
+### Automatic batching
+
+Batching in React is whenever multiple state updates are combined into a single re-render.
+
+```jsx
+function App() {
+  const [count, setCount] = useState(0)
+  const [flag, setFlag] = useState(false)
+
+  function handleClick() {
+    setCount((c) => c + 1) // Does not re-render yet
+    setFlag((f) => !f) // Does not re-render yet
+
+    // React will only re-render once at the end (that's batching!)
+  }
+
+  return (
+    <div>
+      <button onClick={handleClick}>Next</button>
+      <h1 style={{ color: flag ? 'blue' : 'black' }}>{count}</h1>
+    </div>
+  )
+}
+```
+
+In this example, the component would only be rendered once after **handleClick** is called, Although we might think **setCount** and **setClicked** would trigger two re-renders.
+
+Now, while this works well at the moment,
+
+if you’re calling multiple state updates in a different context such as **a promise** or **a callback.**
+
+```jsx
+// Promise
+fetchSomething().then(() => {
+  setCount(count + 1)
+  setFlag(true)
+})
+
+//callback or timeout
+setTimeOut(() => {
+  setCount(count + 1)
+  setFlag(true)
+})
+```
+
+**React won’t batch these two updates into one and you’ll get two re-renders when only one would have been needed.**
+
+With React 18, all these use-cases will now be covered and state updates will be batched automatically no matter what’s the context.
+
+```jsx
+import { unstable_batchedUpdates } from 'react-dom'
+unstable_batchedUpdates(() => {
+  setCount(count + 1)
+  setFlag(true)
+})
+
+//React 18 will do it for you by default.
+```
+
+This might remind you of **unstable_batchedUpdates** that was doing exactly this, well now, React will do it for you by default.
+
+**How to stop batching ?**
+
+If you happen not to want these updates to be batched, you’ll need to use **flushSync** that will re-render your component every time it’s done running the function you’re passing it to.
+
+```jsx
+import { flushSync } from 'react-dom'
+
+function handleClick() {
+  flushSync(() => {
+    setCount(count + 1)
+  })
+  // React has re-render
+
+  flushSync(() => {
+    setFlag(true)
+  })
+  // React will re-render
+}
+```
+
+So with the following, your component would render twice instead of just one time.
+
+### Transitions
+
+A really big new feature, which allows you “to tell React **which updates are urgent, and which are not**”.
+
+A good example of that is a search input that should filter out a list of elements.
+
+So if you’re updating a search input, you’d want its value to change as we type, Although the search results might appear in a second
+
+phase when we’re done typing.
+
+```jsx
+import { startTransition } from 'react'
+
+//Urgent : Update input value as type
+setInputValue(input)
+
+startTransition(() => {
+  //Secondary: Show the search results
+  setSearchQuery(input)
+})
+```
+
+This is where we could mark the input value change as an urgent update, and the elements filtering as secondary also called now a transition.
+
+Transitions can be interrupted by urgent updates and previous transitions that are no longer relevant will be dismissed.
+
+This allows the user interface to only show its most up-to-date state and skip secondary updates, transitions, that might be slower
+
+to compute and sometimes return intermediate states that are irrelevant.
+
+As you can see here, we’re marking the input value change as urgent, and run our secondary update inside a transition as it might trigger slow computations and could freeze or slow down the whole user experience as we type.
+
+**startTransition** is great for any update “you want to move to the background” such as slow and complex rendering tasks or when
+
+updates rely on fetching data that might take time due to a slow network.
+
+### Suspense and Server-Side Rendering
+
+The way SSR ( Server side rendering ) works is by rendering all the
+
+components on the server first, then sending the result as HTML to the browser.
+
+After that, the JavaScript is loaded as usual and the HTML magically becomes interactive by what is called hydration.
+
+This turns your static HTML elements into your dynamic React components as you know them.
+
+**Problem?**
+
+The main problem with this approach is that as long as the JavaScript hasn’t been fetched, loaded, and your HTML hydrated, your page won’t be interactive.
+
+To solve this waterfall issue, React 18 now offers two new features for SSR:
+
+**Streaming HTML and Selective Hydration**
+
+### Streaming HTML
+
+Streaming HTML means that the server can send pieces of your components as they get rendered.
+
+This works by using Suspense, where you’d say which parts of your application will take longer to load and which ones should be rendered directly.
+
+```jsx
+<Page>
+  <Article />
+  <Suspense fallback={<Loader />}>
+    <Comments />
+  </Suspense>
+</Page>
+```
+
+If you think of an article with comments where the article is the critical part of the page, you could say load the article but don’t
+
+wait for the comments to be ready to send HTML to the browser.
+
+You could show a spinner instead using **Suspense** and once the comments are ready,
+
+React will send new bits of HTML that will replace the spinner in place.
+
+### Selective hydration
+
+Selective hydration is awesome.
+
+Where before you’d have to wait for every component to be rendered to begin hydration, but now components wrapped with Suspense won’t block hydration anymore.
+
+if we go back to our article page, the comments that we wrapped with Suspense won’t block the article and other components to be hydrated.
+
+Every ready component will start hydrating and the comments will too, once the browser gets both its content and JavaScript code.
+
+The most important feature of selective hydration
+
+is that if you happen to interact with one of the components before it’s been fully hydrated, meaning you click somewhere, for example, React will prioritize this component’s hydration.
+
+This ensures that the most critical interactions are to be repeated as soon as we can hydrate the related component, making sure it’s
+
+hydrated before the others.
+
+Thank you for reading.
+
+If you really learned something new with this article, save it and share it with your colleagues.
+
+I am also writing tech blogs on [makewebhappy](https://www.makewebhappy.com/) This is my first tech article in Dev.to.
+You can reach me out on twitter @muditit

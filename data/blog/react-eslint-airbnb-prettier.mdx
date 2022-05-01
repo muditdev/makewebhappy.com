@@ -1,13 +1,14 @@
 ---
 title: 'How to set up Modern React js workflow with Vite, esm, eslint, airbnb and prettier'
-publishedAt: '2021-04-25'
-summary: 'A simple guide to setup react js project with vite 2, eslint and airbnb goodness'
-og: '/blog/animated-music-bars/og.png'
-image: '/blog/Reactjs-vite-airbnb.jpeg'
-tags: ["React", "Vite", "ESLint", "Airbnb"]
---- 
+date: '2021-04-25T13:32:06.592Z'
+tags: ['react', 'guide', 'vite', 'eslint', 'airbnb', 'prettier']
+draft: false
+images: ['/static/images/Reactjs-vite-airbnb.jpeg']
+summary: 'A simple guide to setup react js project with vite 2, eslint and airbnb goodness.'
+authors: ['default']
+---
 
-Photo by <a href="https://unsplash.com/@sigmund?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Sigmund</a> on <a href="https://unsplash.com/s/photos/girl-code?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+![banner](/static/images/Reactjs-vite-airbnb.jpeg)
 
 We all have used tools like webpack, Rollup and Parcel, mostly we used create-react-app which is webpack under the hood. These tools greatly improved the development experience for front-end developers.
 
@@ -25,7 +26,7 @@ Before ES modules were available in browsers, developers had no native mechanism
 
 Creating a react project is very simple by just running this command in your terminal
 
-```bash
+```bsh
  npm init @vitejs/app
  // or
  yarn create @vitejs/app
@@ -35,7 +36,7 @@ After running this command vite will prompt few questions you have to pick react
 
 Now you will need to install your dependancies
 
-```bash
+```bsh
  npm install
  // or
  yarn
@@ -54,7 +55,7 @@ For vscode we have to install _eslint_ and _prettier_ extensions.
 
 ### Install ESlint
 
-```bash
+```bsh
 npx eslint --init
 ```
 
@@ -63,7 +64,7 @@ Install packages using npm or yarn and your are good to go..
 
 It will generate a eslintrc file, this is the entry file to your eslint config. before setting this up let's start few more packages to help browser to formate code currectly
 
-```bash
+```bsh
 npm i -D eslint prettier eslint-plugin-prettier eslint-config-prettier
 
 ```
@@ -139,5 +140,5 @@ We are almost there. Just restart your vscode and you have set up your modern re
 
 Thanks you for reading...
 
-Check out the (full source code on GitHub)
+Here is the github repo you can clone and start coding
 [https://github.com/muditdev/react-starter-vite.git](https://github.com/muditdev/react-starter-vite.git)
