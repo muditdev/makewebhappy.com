@@ -1,47 +1,38 @@
 module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
-    es2021: true,
+    amd: true,
     node: true,
+    es6: true,
   },
-  extends: ['plugin:react/recommended', 'plugin:@typescript-eslint/recommended', 'airbnb', 'plugin:prettier/recommended'],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 12,
-    sourceType: 'module',
-    tsconfigRootDir: './',
-  },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier', 'import'],
+  plugins: ['@typescript-eslint'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+    'next',
+    'next/core-web-vitals',
+  ],
   rules: {
-    'react/react-in-jsx-scope': 0,
-    'react/jsx-filename-extension': [
-      1,
+    'prettier/prettier': 'error',
+    'react/react-in-jsx-scope': 'off',
+    'jsx-a11y/anchor-is-valid': [
+      'error',
       {
-        extensions: ['.js', '.tsx'],
+        components: ['Link'],
+        specialLink: ['hrefLeft', 'hrefRight'],
+        aspects: ['invalidHref', 'preferButton'],
       },
     ],
-    'react/jsx-one-expression-per-line': 0,
-    'react/require-default-props': 0,
-    'react/jsx-props-no-spreading': 0,
-    'jsx-a11y/anchor-is-valid': 0, // next-links require empty a tags
-    'jsx-a11y/label-has-associated-control': 0,
-    'import/prefer-default-export': 0,
-    'import/extensions': 0,
-    '@typescript-eslint/explicit-module-boundary-types': 0,
-    'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': ['warn'],
-    '@typescript-eslint/no-unused-vars': 'error',
-    'no-unused-vars': 'off',
+    'react/prop-types': 0,
+    'no-unused-vars': 0,
+    'react/no-unescaped-entities': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
-  globals: {
-    JSX: true,
-  },
-  settings: {
-    'import/resolver': {
-      typescript: {},
-    },
-  },
-};
+}

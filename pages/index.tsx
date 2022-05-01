@@ -1,109 +1,102 @@
-import { useState, useCallback } from 'react';
-import { GetStaticProps } from 'next';
-import fs from 'fs';
-import matter from 'gray-matter';
-import path from 'path';
-import { NextSeo } from 'next-seo';
-import readingTime from 'reading-time';
+import Link from '@/components/Link'
+import { PageSEO } from '@/components/SEO'
+import Tag from '@/components/Tag'
+import siteMetadata from '@/data/siteMetadata'
+import { getAllFilesFrontMatter } from '@/lib/mdx'
+import formatDate from '@/lib/utils/formatDate'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { PostFrontMatter } from 'types/PostFrontMatter'
+import NewsletterForm from '@/components/NewsletterForm'
 
-import debounce from 'lodash.debounce';
+const MAX_DISPLAY = 5
 
-// Components
-import Layout from 'components/Layout';
-import Newsletter from 'components/newsletter';
-import PostList from 'components/Posts';
+export const getStaticProps: GetStaticProps<{ posts: PostFrontMatter[] }> = async () => {
+  const posts = await getAllFilesFrontMatter('blog')
 
-// Utils
-import { postFilePaths, POSTS_PATH } from 'utils/mdxutils';
-import * as gtag from 'lib/gtag';
+  return { props: { posts } }
+}
 
-// Types
-import type { Meta } from 'pages/blog/[slug]';
-
-import Banner from 'components/Banner';
-import Container from 'happyui/Container';
-import { Col, Grid } from 'happyui/Grid';
-import Search from 'components/Search';
-import Heading from 'happyui/Heading';
-
-export type BlogPosts = Array<{ content: string; filePath: string; meta: Meta }>;
-
-type BlogProps = {
-  posts: BlogPosts;
-};
-
-const Blog = ({ posts }: BlogProps): JSX.Element => {
-  const [currentSearch, setCurrentSearch] = useState('');
-  const trackSearch = useCallback(
-    debounce((value: string) => gtag.search(value), 500),
-    [],
-  );
-  const seoTitle = 'Blog | makewebhappy';
-  const seoDesc = 'I write about React, design,  CSS, animation and more!';
-  const filteredPosts = posts
-    .sort((a, b) => new Date(b.meta.publishedAt).getTime() - new Date(a.meta.publishedAt).getTime())
-    .filter(({ meta: { title, summary, tags } }) => {
-      const searchString = `${title.toLowerCase()} ${summary.toLowerCase()} ${tags?.join(' ')}`;
-      return searchString.includes(currentSearch.toLowerCase());
-    });
-
-  const handleSearch = value => {
-    if (value !== '') {
-      trackSearch(value); // Save what people are interested in reading
-    }
-    return setCurrentSearch(value);
-  };
-
+export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout>
-      <NextSeo
-        title={seoTitle}
-        description={seoDesc}
-        openGraph={{
-          title: seoTitle,
-          url: `https://makewebhappy.com/blog/`,
-          description: seoDesc,
-          site_name: 'makewebhappy',
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
-        }}
-      />
-      <Banner />
-      <Container size="lg">
-        <Grid>
-          <Col>
-            <Search onTextInput={handleSearch} />
-            <div className="mt-2">
-              <PostList posts={filteredPosts} />
-            </div>
-          </Col>
-          <Col>
-            <Heading level={3} align="center">
-              Today’s top resources
-            </Heading>
-          </Col>
-        </Grid>
-      </Container>
-      <Container>
-        <Newsletter title="Subscribe to the newsletter" />
-      </Container>
-    </Layout>
-  );
-};
-export const getStaticProps: GetStaticProps = async () => {
-  const posts = postFilePaths.map(filePath => {
-    const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
-    const { content, data } = matter(source);
-
-    return {
-      content,
-      meta: { ...data, readingTime: readingTime(content) },
-      filePath,
-    };
-  });
-
-  return { props: { posts } };
-};
-
-export default Blog;
+    <>
+      <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+            Latest
+          </h1>
+          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+            {siteMetadata.description}
+          </p>
+        </div>
+        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+          {!posts.length && 'No posts found.'}
+          {posts.slice(0, MAX_DISPLAY).map((frontMatter) => {
+            const { slug, date, title, summary, tags } = frontMatter
+            return (
+              <li key={slug} className="py-12">
+                <article>
+                  <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                    <dl>
+                      <dt className="sr-only">Published on</dt>
+                      <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                        <time dateTime={date}>{formatDate(date)}</time>
+                      </dd>
+                    </dl>
+                    <div className="space-y-5 xl:col-span-3">
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                            <Link
+                              href={`/blog/${slug}`}
+                              className="text-gray-900 dark:text-gray-100"
+                            >
+                              {title}
+                            </Link>
+                          </h2>
+                          <div className="flex flex-wrap">
+                            {tags.map((tag) => (
+                              <Tag key={tag} text={tag} />
+                            ))}
+                          </div>
+                        </div>
+                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                          {summary}
+                        </div>
+                      </div>
+                      <div className="text-base font-medium leading-6">
+                        <Link
+                          href={`/blog/${slug}`}
+                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                          aria-label={`Read "${title}"`}
+                        >
+                          Read more &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      {posts.length > MAX_DISPLAY && (
+        <div className="flex justify-end text-base font-medium leading-6">
+          <Link
+            href="/blog"
+            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            aria-label="all posts"
+          >
+            All Posts &rarr;
+          </Link>
+        </div>
+      )}
+      {siteMetadata.newsletter.provider !== '' && (
+        <div className="flex items-center justify-center pt-4">
+          <NewsletterForm />
+        </div>
+      )}
+    </>
+  )
+}
