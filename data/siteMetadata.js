@@ -23,7 +23,7 @@ const siteMetadata = {
     plausibleDataDomain: 'https://www.makewebhappy.com',
     simpleAnalytics: false, // true or false
     umamiWebsiteId: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
-    googleAnalyticsId: 'UA-93675834-1', // e.g. UA-000000-2 or G-XXXXXXX
+    googleAnalyticsId: 'G-3LB3FP2KHN', // e.g. UA-000000-2 or G-XXXXXXX
   },
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo
