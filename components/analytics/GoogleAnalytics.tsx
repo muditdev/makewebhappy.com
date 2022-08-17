@@ -15,7 +15,9 @@ const GAScript = () => {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'UA-93675834-1');
+            gtag('config', 'UA-93675834-1',{
+              page_path: window.location.pathname,
+            });
         `}
       </Script>
     </>
